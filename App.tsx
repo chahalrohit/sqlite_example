@@ -8,7 +8,7 @@
  * @format
  */
 
-import React, { useCallback, useEffect, useState } from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {
   Button,
   SafeAreaView,
@@ -21,9 +21,15 @@ import {
   View,
 } from 'react-native';
 
-import { ToDoItemComponent } from './components/ToDoItem';
-import { ToDoItem } from './models';
-import { getDBConnection, getTodoItems, saveTodoItems, createTable, deleteTodoItem } from './services/db-service';
+import {ToDoItemComponent} from './components/ToDoItem';
+import {ToDoItem} from './models';
+import {
+  createTable,
+  deleteTodoItem,
+  getDBConnection,
+  getTodoItems,
+  saveTodoItems,
+} from './services/db-service';
 
 const App = () => {
   const isDarkMode = useColorScheme() === 'dark';
@@ -33,7 +39,11 @@ const App = () => {
 
   const loadDataCallback = useCallback(async () => {
     try {
-      const initTodos = [{ id: 0, value: 'go to shop' }, { id: 1, value: 'eat at least a one healthy foods' }, { id: 2, value: 'Do some exercises' }];
+      const initTodos = [
+        {id: 0, value: 'go to shop'},
+        {id: 1, value: 'eat at least a one healthy foods'},
+        {id: 2, value: 'Do some exercises'},
+      ];
       const db = await getDBConnection();
       await createTable(db);
       const storedTodoItems = await getTodoItems(db);
@@ -55,12 +65,18 @@ const App = () => {
   const addTodo = async () => {
     if (!newTodo.trim()) return;
     try {
-      const newTodos = [...todos, {
-        id: todos.length ? todos.reduce((acc, cur) => {
-          if (cur.id > acc.id) return cur;
-          return acc;
-        }).id + 1 : 0, value: newTodo
-      }];
+      const newTodos = [
+        ...todos,
+        {
+          id: todos.length
+            ? todos.reduce((acc, cur) => {
+                if (cur.id > acc.id) return cur;
+                return acc;
+              }).id + 1
+            : 0,
+          value: newTodo,
+        },
+      ];
       setTodos(newTodos);
       const db = await getDBConnection();
       await saveTodoItems(db, newTodos);
@@ -84,19 +100,26 @@ const App = () => {
   return (
     <SafeAreaView>
       <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
-      <ScrollView
-        contentInsetAdjustmentBehavior="automatic">
+      <ScrollView contentInsetAdjustmentBehavior="automatic">
         <View style={[styles.appTitleView]}>
           <Text style={styles.appTitleText}> ToDo Application </Text>
         </View>
 
         <View>
-          {todos.map((todo) => (
-            <ToDoItemComponent key={todo.id} todo={todo} deleteItem={deleteItem} />
+          {todos.map(todo => (
+            <ToDoItemComponent
+              key={todo.id}
+              todo={todo}
+              deleteItem={deleteItem}
+            />
           ))}
         </View>
         <View style={styles.textInputContainer}>
-          <TextInput style={styles.textInput} value={newTodo} onChangeText={text => setNewTodo(text)} />
+          <TextInput
+            style={styles.textInput}
+            value={newTodo}
+            onChangeText={text => setNewTodo(text)}
+          />
           <Button
             onPress={addTodo}
             title="Add ToDo"
@@ -117,7 +140,7 @@ const styles = StyleSheet.create({
   },
   appTitleText: {
     fontSize: 24,
-    fontWeight: '800'
+    fontWeight: '800',
   },
   textInputContainer: {
     marginTop: 30,
@@ -126,14 +149,14 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     borderColor: 'black',
     borderWidth: 1,
-    justifyContent: 'flex-end'
+    justifyContent: 'flex-end',
   },
   textInput: {
     borderWidth: 1,
     borderRadius: 5,
-    height: 30,
+    height: 40,
     margin: 10,
-    backgroundColor: 'pink'
+    backgroundColor: 'pink',
   },
 });
 

@@ -1,12 +1,16 @@
-import { enablePromise, openDatabase, SQLiteDatabase } from 'react-native-sqlite-storage';
-import { ToDoItem } from '../models';
+import {
+  enablePromise,
+  openDatabase,
+  SQLiteDatabase,
+} from 'react-native-sqlite-storage';
+import {ToDoItem} from '../models';
 
 const tableName = 'todoData';
 
 enablePromise(true);
 
 export const getDBConnection = async () => {
-  return openDatabase({ name: 'todo-data.db', location: 'default' });
+  return openDatabase({name: 'todo-data.db', location: 'default'});
 };
 
 export const createTable = async (db: SQLiteDatabase) => {
@@ -21,10 +25,12 @@ export const createTable = async (db: SQLiteDatabase) => {
 export const getTodoItems = async (db: SQLiteDatabase): Promise<ToDoItem[]> => {
   try {
     const todoItems: ToDoItem[] = [];
-    const results = await db.executeSql(`SELECT rowid as id,value FROM ${tableName}`);
+    const results = await db.executeSql(
+      `SELECT rowid as id,value FROM ${tableName}`,
+    );
     results.forEach(result => {
       for (let index = 0; index < result.rows.length; index++) {
-        todoItems.push(result.rows.item(index))
+        todoItems.push(result.rows.item(index));
       }
     });
     return todoItems;
@@ -34,7 +40,10 @@ export const getTodoItems = async (db: SQLiteDatabase): Promise<ToDoItem[]> => {
   }
 };
 
-export const saveTodoItems = async (db: SQLiteDatabase, todoItems: ToDoItem[]) => {
+export const saveTodoItems = async (
+  db: SQLiteDatabase,
+  todoItems: ToDoItem[],
+) => {
   const insertQuery =
     `INSERT OR REPLACE INTO ${tableName}(rowid, value) values` +
     todoItems.map(i => `(${i.id}, '${i.value}')`).join(',');
