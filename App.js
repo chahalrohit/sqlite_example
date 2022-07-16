@@ -34,8 +34,9 @@ import {
 const App = () => {
   const isDarkMode = useColorScheme() === 'dark';
 
-  const [todos, setTodos] = useState<ToDoItem[]>([]);
+  const [todos, setTodos] = useState([]);
   const [newTodo, setNewTodo] = useState('');
+  const [data, setData] = useState({});
 
   const loadDataCallback = useCallback(async () => {
     try {
@@ -62,6 +63,33 @@ const App = () => {
     loadDataCallback();
   }, [loadDataCallback]);
 
+  useEffect(() => {
+    fetch('https://api.groofyapp.com/api/verification', {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        mobileno: '9050410564',
+      }),
+    })
+      .then(response => response.json())
+      .then(responseJson => {
+        if (responseJson.status === 'success') {
+          setData(responseJson.data);
+          console.log('responseJson -->> ' + JSON.stringify(responseJson));
+        } else {
+          console.log(
+            'api fail message -->> ' + JSON.stringify(responseJson.message),
+          );
+        }
+      })
+      .catch(error => {
+        console.error(error);
+      });
+  }, []);
+
   const addTodo = async () => {
     if (!newTodo.trim()) return;
     try {
@@ -86,7 +114,7 @@ const App = () => {
     }
   };
 
-  const deleteItem = async (id: number) => {
+  const deleteItem = async id => {
     try {
       const db = await getDBConnection();
       await deleteTodoItem(db, id);
@@ -114,6 +142,10 @@ const App = () => {
             />
           ))}
         </View>
+        <Text style={{textAlign: 'center'}}>{data.id}</Text>
+        <Text style={{textAlign: 'center'}}>{data.name}</Text>
+        <Text style={{textAlign: 'center'}}>{data.email}</Text>
+        <Text style={{textAlign: 'center'}}>{data.mobileno}</Text>
         <View style={styles.textInputContainer}>
           <TextInput
             style={styles.textInput}

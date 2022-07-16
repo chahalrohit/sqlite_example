@@ -13,7 +13,7 @@ export const getDBConnection = async () => {
   return openDatabase({name: 'todo-data.db', location: 'default'});
 };
 
-export const createTable = async (db: SQLiteDatabase) => {
+export const createTable = async db => {
   // create table if not exists
   const query = `CREATE TABLE IF NOT EXISTS ${tableName}(
         value TEXT NOT NULL
@@ -22,9 +22,9 @@ export const createTable = async (db: SQLiteDatabase) => {
   await db.executeSql(query);
 };
 
-export const getTodoItems = async (db: SQLiteDatabase): Promise<ToDoItem[]> => {
+export const getTodoItems = async db => {
   try {
-    const todoItems: ToDoItem[] = [];
+    const todoItems = [];
     const results = await db.executeSql(
       `SELECT rowid as id,value FROM ${tableName}`,
     );
@@ -40,10 +40,7 @@ export const getTodoItems = async (db: SQLiteDatabase): Promise<ToDoItem[]> => {
   }
 };
 
-export const saveTodoItems = async (
-  db: SQLiteDatabase,
-  todoItems: ToDoItem[],
-) => {
+export const saveTodoItems = async (db, todoItems) => {
   const insertQuery =
     `INSERT OR REPLACE INTO ${tableName}(rowid, value) values` +
     todoItems.map(i => `(${i.id}, '${i.value}')`).join(',');
@@ -51,12 +48,12 @@ export const saveTodoItems = async (
   return db.executeSql(insertQuery);
 };
 
-export const deleteTodoItem = async (db: SQLiteDatabase, id: number) => {
+export const deleteTodoItem = async (db, id) => {
   const deleteQuery = `DELETE from ${tableName} where rowid = ${id}`;
   await db.executeSql(deleteQuery);
 };
 
-export const deleteTable = async (db: SQLiteDatabase) => {
+export const deleteTable = async db => {
   const query = `drop table ${tableName}`;
 
   await db.executeSql(query);

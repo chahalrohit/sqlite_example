@@ -1,23 +1,12 @@
 import React from 'react';
-import {
-  Button,
-  StyleSheet,
-  Text,
-  View,
-} from 'react-native';
-import { ToDoItem } from '../models';
+import {Button, StyleSheet, Text, View} from 'react-native';
+import {ToDoItem} from '../models';
 
-export const ToDoItemComponent: React.FC<{
-  todo: ToDoItem;
-  deleteItem: Function;
-}> = ({ todo: {id, value}, deleteItem }) => {
+export const ToDoItemComponent = ({todo: {id, value}, deleteItem}) => {
   return (
     <View style={styles.todoContainer}>
       <View style={styles.todoTextContainer}>
-        <Text
-          style={styles.sectionTitle}>
-          {value}
-        </Text>
+        <Text style={styles.sectionTitle}>{value}</Text>
       </View>
       <Button
         onPress={() => deleteItem(id)}
@@ -47,5 +36,5 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 20,
     fontWeight: '400',
-  }
+  },
 });
